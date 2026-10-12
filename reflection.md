@@ -7,6 +7,13 @@
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+- So it would be add a new pet profile, scheduling a pet care task with specific time, priority, and frequency constraints, and generating a daily plan that chronologically sorts tasks and alerts the owner of time conflicts.
+- My initial UML design organizes these actions across four primary classes:
+    - Task: Represents a single activity, holding attributes for description, time, frequency, and completion status.
+    - Pet: Represents an animal profile, storing pet details and a list of their specific assigned Tasks.
+    - Owner: The central profile manager that links multiple pets together and uses a method to aggregate everything.
+    - Scheduler: The system's brain that reads tasks from the Owner to sort the day's schedule chronologically and flag time conflicts.
+
 **b. Design changes**
 
 - Did your design change during implementation?
