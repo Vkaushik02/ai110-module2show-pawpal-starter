@@ -116,6 +116,10 @@ class Scheduler:
         """Return the given tasks ordered by their time."""
         return sorted(tasks, key=lambda t: t.time)
 
+    def filter_by_status(self, completed: bool) -> list[Task]:
+        """Return the owner's tasks that match the given completion status."""
+        return [t for t in self.owner.get_all_tasks() if t.is_complete == completed]
+
     def detect_conflicts(self, tasks: list[Task]) -> list[list[Task]]:
         """Return groups of tasks that share the same date and time slot."""
         slots: dict[tuple[date, str], list[Task]] = {}

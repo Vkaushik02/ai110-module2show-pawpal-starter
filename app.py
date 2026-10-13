@@ -1,4 +1,10 @@
 import streamlit as st
+from pawpal_system import Frequency, Owner, Pet, Scheduler, Task
+
+if "owner" not in st.session_state:
+    st.session_state.owner = Owner(name="Jordan")
+
+owner = st.session_state.owner  # always use this reference afterward
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -38,51 +44,60 @@ At minimum, your system should:
 
 st.divider()
 
-st.subheader("Quick Demo Inputs (UI only)")
-owner_name = st.text_input("Owner name", value="Jordan")
-pet_name = st.text_input("Pet name", value="Mochi")
-species = st.selectbox("Species", ["dog", "cat", "other"])
+st.subheader("Add a Pet")
+with st.form("add_pet_form", clear_on_submit=True):
+    pet_name = st.text_input("Pet name")
+    species = st.selectbox("Species", ["dog", "cat", "other"])
+    age = st.number_input("Age", min_value=0, max_value=40, value=1)
+    if st.form_submit_button("Add pet"):
+        if pet_name.strip():
+            owner.add_pet(Pet(name=pet_name.strip(), species=species, age=int(age)))
+            st.success(f"Added {pet_name}!")
+        else:
+            st.error("Pet name is required.")
 
-st.markdown("### Tasks")
-st.caption("Add a few tasks. In your final version, these should feed into your scheduler.")
-
-if "tasks" not in st.session_state:
-    st.session_state.tasks = []
-
-col1, col2, col3 = st.columns(3)
-with col1:
-    task_title = st.text_input("Task title", value="Morning walk")
-with col2:
-    duration = st.number_input("Duration (minutes)", min_value=1, max_value=240, value=20)
-with col3:
-    priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
-
-if st.button("Add task"):
-    st.session_state.tasks.append(
-        {"title": task_title, "duration_minutes": int(duration), "priority": priority}
-    )
-
-if st.session_state.tasks:
-    st.write("Current tasks:")
-    st.table(st.session_state.tasks)
+st.subheader("Schedule a Task")
+if not owner.pets:
+    st.info("Add a pet first.")
 else:
-    st.info("No tasks yet. Add one above.")
+    with st.form("add_task_form"):
+        # select by index: st.selectbox returns a copy of object options, not the original
+        pet_index = st.selectbox(
+            "Pet", range(len(owner.pets)), format_func=lambda i: owner.pets[i].name
+        )
+        pet_choice = owner.pets[pet_index]
+        description = st.text_input("Task description", value="Morning walk")
+        task_time = st.time_input("Time")
+        frequency = st.selectbox(
+            "Frequency", list(Frequency), format_func=lambda f: f.value
+        )
+        due = st.date_input("Due date")
+        if st.form_submit_button("Add task"):
+            pet_choice.add_task(
+                Task(
+                    description=description,
+                    time=task_time.strftime("%H:%M"),  # keeps string sorting chronological
+                    frequency=frequency,
+                    due_date=due,
+                )
+            )
+            st.success(f"Scheduled '{description}' for {pet_choice.name}.")
 
 st.divider()
+st.subheader("Today's Schedule")
+scheduler = Scheduler(owner)
+schedule = scheduler.get_daily_schedule()
 
-st.subheader("Build Schedule")
-st.caption("This button should call your scheduling logic once you implement it.")
+for conflict in scheduler.detect_conflicts(schedule):
+    names = ", ".join(f"{t.pet.name}: {t.description}" for t in conflict)
+    st.warning(f"⚠️ Conflict at {conflict[0].time}: {names}")
 
-if st.button("Generate schedule"):
-    st.warning(
-        "Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
-    )
-    st.markdown(
-        """
-Suggested approach:
-1. Design your UML (draft).
-2. Create class stubs (no logic).
-3. Implement scheduling behavior.
-4. Connect your scheduler here and display results.
-"""
-    )
+if schedule:
+    for i, task in enumerate(schedule):
+        col1, col2 = st.columns([4, 1])
+        col1.write(f"**{task.time}** — {task.pet.name}: {task.description} ({task.frequency.value})")
+        if col2.button("Done", key=f"done_{i}_{id(task)}"):
+            task.mark_complete()  # queues the next occurrence for daily/weekly tasks
+            st.rerun()
+else:
+    st.info("Nothing scheduled for today.")

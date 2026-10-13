@@ -33,6 +33,7 @@
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+- One tradeoff it makes is the exact time matching instead of overlap detection. Detec_conflict groups tasks by time and two tasks are at conflict only if their time string are identical. It is reasonable becuase it is simple, fast, and predictable. 
 
 ---
 

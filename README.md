@@ -70,14 +70,12 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
-
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.sort_by_time` | Orders tasks by their `HH:MM` time. Works because times are zero-padded 24-hour strings, so string order matches chronological order. Ties keep insertion order. |
+| Filtering | `Scheduler.get_daily_schedule`, `Scheduler.filter_by_status` | `get_daily_schedule` keeps only incomplete tasks due today, sorted by time. `filter_by_status(completed)` returns all of the owner's pending or completed tasks. |
+| Conflict handling | `Scheduler.detect_conflicts` | Groups tasks by exact `(due_date, time)` and returns every group with more than one task, for the same pet or different pets. It returns the groups rather than raising an error, and the UI shows them as warnings. It doesn't detect partial overlaps because tasks have no duration. |
+| Recurring tasks | `Task.mark_complete`, `Frequency` | Completing a `DAILY` or `WEEKLY` task creates the next occurrence on the same pet, with the due date moved forward 1 or 7 days using `timedelta`. `ONCE` tasks just complete. |
 
 ## Implementation Summary
 
