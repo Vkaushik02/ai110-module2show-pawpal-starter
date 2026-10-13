@@ -46,13 +46,11 @@ pip install -r requirements.txt
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
 
-```
-# e.g.:
-# Daily plan for Biscuit (Golden Retriever):
-#   08:00 — Morning walk (30 min) [priority: high]
-#   09:00 — Feeding (10 min) [priority: high]
-#   ...
-```
+Today's Schedule for Jordan
+- 07:30  Morning walk       (Buddy)
+- 08:00  Feed breakfast     (Whiskers)
+- 12:15  Flea medication    (Whiskers)
+- 18:00  Evening walk       (Buddy)
 
 ## 🧪 Testing PawPal+
 
@@ -80,6 +78,10 @@ Sample test output:
 | Filtering | | e.g., skip tasks if time runs out |
 | Conflict handling | | e.g., overlapping time slots |
 | Recurring tasks | | e.g., daily vs. weekly |
+
+## Implementation Summary
+
+The PawPal+ core system architecture manages pet care schedules using object-oriented relationships between the Owner, Pet, Task, and Scheduler classes. An Owner can manage multiple Pet instances, each maintaining its own collection of Task objects defined by a specific Frequency enumeration. The system relies on the central Scheduler class to pull consolidated data from the Owner layer, allowing it to efficiently organize daily routines, sort items chronologically, and evaluate the schedule for potential timing conflicts.
 
 ## 📸 Demo Walkthrough
 

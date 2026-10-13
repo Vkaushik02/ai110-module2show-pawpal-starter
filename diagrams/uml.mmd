@@ -3,12 +3,21 @@ classDiagram
     %% Keep this file updated so it matches your final implementation.
 
    classDiagram
+    class Frequency {
+        <<enumeration>>
+        ONCE
+        DAILY
+        WEEKLY
+    }
+
     class Task {
         +str description
         +str time
-        +str frequency
+        +Frequency frequency
+        +date due_date
+        +Pet pet
         +bool is_complete
-        +mark_complete() void
+        +mark_complete() Task
         +reschedule(new_time) void
         +is_due_today() bool
     }
@@ -35,10 +44,12 @@ classDiagram
         +Owner owner
         +get_daily_schedule() list
         +sort_by_time(tasks) list
-        +detect_conflicts(tasks) list
+        +detect_conflicts(tasks) list~list~Task~~
     }
 
     Owner "1" --> "*" Pet : owns
     Pet "1" --> "*" Task : has
+    Task "*" --> "0..1" Pet : belongs to
+    Task --> Frequency : repeats
     Scheduler --> Owner : reads tasks from
 

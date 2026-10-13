@@ -18,6 +18,7 @@
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+- yes the changes made were adding frequency enum, due date on tasks, pet refrence on taks, and changed mark complete logic.
 
 ---
 
@@ -42,10 +43,14 @@
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+- I used AI for design of uml and brainstorming. The most useful prompt were the those with many detials and clear goals. Like this one "I am designing a pet care app with Owner, Pet, Task, and Scheduler classes. Create a Mermaid.js class diagram based on these requirements." as this gives the AI the exact steps and goals. 
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+- The AI suggested a highly nested approach where the Scheduler directly accessed and manipulated individual task arrays inside the Pet instances by looping through them manually. I did not accept this suggestion. I evaluated the suggestion by comparing it against our system guidelines, realizing that the Scheduler should dynamically pull consolidated data from the Owner layer instead of managing individual pet objects directly. To verify my revised approach I tested need code using test cases. 
 
 ---
 
