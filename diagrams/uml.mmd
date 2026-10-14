@@ -1,8 +1,4 @@
 classDiagram
-    %% Replace the placeholders below with your actual classes, attributes, methods, and relationships.
-    %% Keep this file updated so it matches your final implementation.
-
-   classDiagram
     class Frequency {
         <<enumeration>>
         ONCE
@@ -26,30 +22,31 @@ classDiagram
         +str name
         +str species
         +int age
-        +list tasks
+        +list~Task~ tasks
         +add_task(task) void
         +remove_task(task) void
-        +get_pending_tasks() list
+        +get_pending_tasks() list~Task~
     }
 
     class Owner {
         +str name
-        +list pets
+        +list~Pet~ pets
         +add_pet(pet) void
         +remove_pet(pet) void
-        +get_all_tasks() list
+        +get_all_tasks() list~Task~
     }
 
     class Scheduler {
         +Owner owner
-        +get_daily_schedule() list
-        +sort_by_time(tasks) list
+        +get_daily_schedule() list~Task~
+        +sort_by_time(tasks) list~Task~
+        +filter_by_status(completed) list~Task~
         +detect_conflicts(tasks) list~list~Task~~
     }
 
     Owner "1" --> "*" Pet : owns
-    Pet "1" --> "*" Task : has
-    Task "*" --> "0..1" Pet : belongs to
+    Pet "1" <--> "*" Task : has / belongs to
     Task --> Frequency : repeats
+    Task ..> Task : mark_complete() creates next occurrence
     Scheduler --> Owner : reads tasks from
-
+    Scheduler ..> Task : sorts, filters, detects conflicts

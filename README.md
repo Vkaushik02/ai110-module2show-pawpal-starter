@@ -83,16 +83,43 @@ tests\test_pawpal.py ............                                               
 
 ## Implementation Summary
 
-The PawPal+ core system architecture manages pet care schedules using object-oriented relationships between the Owner, Pet, Task, and Scheduler classes. An Owner can manage multiple Pet instances, each maintaining its own collection of Task objects defined by a specific Frequency enumeration. The system relies on the central Scheduler class to pull consolidated data from the Owner layer, allowing it to efficiently organize daily routines, sort items chronologically, and evaluate the schedule for potential timing conflicts.
+The PawPal+ core system architecture manages pet care schedules using object-oriented relationships between the Owner, Pet, Task, and Scheduler classes. An Owner can manage multiple Pet instances, each maintaining its own collection of Task objects, and each Task repeats according to a Frequency enumeration value. The central Scheduler class pulls consolidated data from the Owner layer, which lets it organize daily routines, sort items chronologically, and check the schedule for timing conflicts.
 
 ## 📸 Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+### Main UI features
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+The Streamlit app (`streamlit run app.py`) lets the owner:
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+- **Add a pet** with a name, species (dog, cat or other) and age. A blank name is rejected with an error.
+- **Schedule a task** for any pet by choosing the task description, time, frequency (once, daily or weekly) and due date.
+- **View Today's Schedule**, a chronologically ordered list of tasks due today, each with a **Done** button.
+- **See conflict warnings** above the schedule whenever two or more tasks share the same date and time.
+
+### Example workflow
+
+1. Run `streamlit run app.py`. The app starts with an owner named Jordan and no pets, so "Schedule a Task" shows "Add a pet first."
+2. Under **Add a Pet**, enter `Buddy`, choose `dog`, set age `4` and click **Add pet**. A green confirmation appears. Repeat for `Whiskers` (cat, age 2).
+3. Under **Schedule a Task**, pick Buddy, enter `Evening walk` at 18:00, frequency `daily`, and today's date. Click **Add task**. Then add `Morning walk` at 07:30 for Buddy and `Feed breakfast` at 08:00 for Whiskers.
+4. Scroll to **Today's Schedule**. The tasks appear as 07:30, 08:00, 18:00, even though they were entered out of order.
+5. Add another task at 08:00 for Buddy. A `⚠️ Conflict at 08:00` warning appears and names both tasks.
+6. Click **Done** on `Morning walk`. It leaves today's list and, because it is `daily`, a copy due tomorrow is created for the same pet.
+
+### Key Scheduler behaviors shown
+
+- **Sorting:** `get_daily_schedule()` sorts via `sort_by_time()`, so the order is chronological regardless of entry order.
+- **Filtering:** only incomplete tasks due today are shown. Completed tasks and future-dated tasks drop out.
+- **Conflict warnings:** `detect_conflicts()` groups tasks by `(due_date, time)` and the UI shows one warning per group, for the same pet or across pets.
+- **Recurring tasks:** completing a daily or weekly task creates the next occurrence (+1 or +7 days) on the same pet.
+
+### Sample CLI output
+
+```text
+========================================
+Today's Schedule for Jordan
+========================================
+07:30  Morning walk       (Buddy)
+08:00  Feed breakfast     (Whiskers)
+12:15  Flea medication    (Whiskers)
+18:00  Evening walk       (Buddy)
+```

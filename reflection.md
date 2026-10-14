@@ -4,10 +4,7 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
-
-- So it would be add a new pet profile, scheduling a pet care task with specific time, priority, and frequency constraints, and generating a daily plan that chronologically sorts tasks and alerts the owner of time conflicts.
+- The app would let a user add a new pet profile, schedule a pet care task with specific time, priority, and frequency constraints, and generate a daily plan that chronologically sorts tasks and alerts the owner of time conflicts.
 - My initial UML design organizes these actions across four primary classes:
     - Task: Represents a single activity, holding attributes for description, time, frequency, and completion status.
     - Pet: Represents an animal profile, storing pet details and a list of their specific assigned Tasks.
@@ -16,9 +13,7 @@
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
-- yes the changes made were adding frequency enum, due date on tasks, pet refrence on taks, and changed mark complete logic.
+- Yes, I made changes: I added a frequency enum, a due date on tasks, and a pet reference on tasks, and I changed the mark complete logic.
 
 ---
 
@@ -26,14 +21,11 @@
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+- The scheduler considers time constraints: each task has a time, which is used to sort tasks and to detect conflicts. The date is also considered and used in conflict detection. I decided what mattered most by asking what a pet owner needs to know in order to know what to do. This led me to pick time and date as the two constraints.
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
-- One tradeoff it makes is the exact time matching instead of overlap detection. Detec_conflict groups tasks by time and two tasks are at conflict only if their time string are identical. It is reasonable becuase it is simple, fast, and predictable. 
+- One tradeoff it makes is exact time matching instead of overlap detection. `detect_conflicts` groups tasks by time, and two tasks are in conflict only if their time strings are identical. This is reasonable because it is simple, fast, and predictable.
 
 ---
 
@@ -41,17 +33,11 @@
 
 **a. How you used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
-
-- I used AI for design of uml and brainstorming. The most useful prompt were the those with many detials and clear goals. Like this one "I am designing a pet care app with Owner, Pet, Task, and Scheduler classes. Create a Mermaid.js class diagram based on these requirements." as this gives the AI the exact steps and goals. 
+- I used AI for UML design and brainstorming. The most useful prompts were those with many details and clear goals, like this one: "I am designing a pet care app with Owner, Pet, Task, and Scheduler classes. Create a Mermaid.js class diagram based on these requirements." It gives the AI the exact steps and goals.
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
-
-- The AI suggested a highly nested approach where the Scheduler directly accessed and manipulated individual task arrays inside the Pet instances by looping through them manually. I did not accept this suggestion. I evaluated the suggestion by comparing it against our system guidelines, realizing that the Scheduler should dynamically pull consolidated data from the Owner layer instead of managing individual pet objects directly. To verify my revised approach I tested need code using test cases. 
+- The AI suggested a highly nested approach where the Scheduler directly accessed and manipulated individual task arrays inside the Pet instances by looping through them manually. I did not accept this suggestion. I evaluated it by comparing it against our system guidelines, and realized that the Scheduler should dynamically pull consolidated data from the Owner layer instead of managing individual pet objects directly. To verify my revised approach, I tested the code using test cases.
 
 ---
 
@@ -59,13 +45,11 @@
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+- I tested four areas. One was the basics, like adding tasks and increasing the task count. I also tested sorting by time, recurrence (daily, weekly, and one-time), and conflict detection. These tests were important because sorting, conflict detection, and recurrence are the core of the program. If one of them is wrong, the owner would see a misleading plan.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+- I am confident in the scheduler because all the test cases passed. I would rate my confidence 4 out of 5, as that matches how I feel. If I had more time, I would test invalid times, and removing a task or pet and checking that the back reference is cleared.
 
 ---
 
@@ -73,12 +57,12 @@
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+- I am satisfied with all the parts, as they all took a lot of time and effort.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+- I would redesign the UI, as right now it is very simple and basic.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+- The most important thing I learned is that a UML diagram is a starting point, not a finished plan. My initial design changed as I built it. I added things and changed how methods worked.
