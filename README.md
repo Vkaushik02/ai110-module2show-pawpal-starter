@@ -64,9 +64,13 @@ pytest --cov
 
 Sample test output:
 
-```
-# Paste your pytest output here
-```
+collected 12 items                                                                                                                                       
+
+tests\test_pawpal.py ............                                                                                                                  [100%]
+
+================================================================== 12 passed in 0.09s ===================================================================
+
+- The 12 tests cover task completion and adding tasks to a pet, chronological sorting of the daily schedule (including out-of-order input, zero-padded times and an empty list), recurrence (daily creates a next-day task, weekly +7 days, one-time none), and conflict detection (same date and time flagged, including across pets, while different times or dates are not).
 
 ## 📐 Smarter Scheduling
 
